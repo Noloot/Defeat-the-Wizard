@@ -40,6 +40,7 @@ class Warrior(Character):
             return
         print("1. Deadly Strike")
         print("2. Breserk")
+        print("3. Attempt Evolution")
         action = input("\nWhich ability would you like to use? ")
         
         if action == '1':
@@ -52,12 +53,31 @@ class Warrior(Character):
             self.attack_power = self.base_attack_power * 4
             self.special_uses += 1
             print(f"{self.name} enters Berserk mode! Attack power is now {self.attack_power}!")
+        elif action == '3':
+            chance = random.randint(1, 100)
+            if chance <= 30:
+                print(f"{self.name} has evolved into a HERO!")
+                self.max_health += 60
+                self.health = self.max_health
+                self.attack_power += 15
+                self.base_attack_power = self.attack_power
+                self.name += " the Hero"
+            else:
+                print(f"{self.name}'s evolution attempt failed. Maybe next time...")
+            evolve_chance = random.randint(1, 100)
+            if evolve_chance <= 20 and not opponent.evolved:
+                opponent.evolve()
+            else:
+                print(f"{opponent.name} attempted to evolve... but failed. The darkness stirs.")
+        else:
+            print("Invalid input.")
             
 class Mage(Character):
     def __init__(self, name):
         super().__init__(name, health=100, attack_power=35)
         self.special_limit = 4
         self.special_uses = 0
+        self.base_attack_power = 35
     
     def special_ability(self, opponent):
         print("\nSpecial Abilities")
@@ -66,6 +86,7 @@ class Mage(Character):
             return
         print("1. Meteor Strike")
         print("2. Ice Storm")
+        print("3 Attempt Evolution")
         action = input("\nWhich ability do you want to use? ")
         
         if action == '1':
@@ -76,12 +97,29 @@ class Mage(Character):
         elif action == '2':
             opponent.stunned = True
             print(f"{self.name} casts Ice Storm! {opponent.name} is stunned and cannot attack next turn!")
+        elif action == '3':
+            chance = random.randint(1, 100)
+            if chance <= 30:
+                print(f"{self.name} has evolved into ARCHMAGE!")
+                self.max_health += 25
+                self.health = self.max_health
+                self.attack_power += 50
+                self.base_attack_power = self.attack_power
+                self.name += " the Archmage"
+            else:
+                print(f"{self.name}' evolution attempt failed. Maybe next time...")
+            evolve_chance = random.randint(1, 100)
+            if evolve_chance <= 20 and not opponent.evolved:
+                opponent.evolve()
+            else:
+                print(f"{opponent.name} attempted to evolve... but failed. The darkness stirs.")
         else:
             print("Invalid input.")
             
 class Archer(Character):
     def __init__(self, name):
         super().__init__(name, health=120, attack_power=20)
+        self.base_attack_power = 20
         self.special_limit = 8
         self.special_uses = 0
         self.evade_next = False
@@ -93,6 +131,7 @@ class Archer(Character):
             return
         print("1. Arrow Rain")
         print("2. Quick Evade")
+        print("3. Attempt Evolution")
         action = input("\nWhich ability do you want to use? ")
         
         if action == '1':
@@ -104,12 +143,29 @@ class Archer(Character):
             self.evade_next = True
             self.special_uses += 1
             print(f"{self.name} evaded the {opponent.name}'s next attack!")
+        elif action == '3':
+            chance = random.randint(1, 100)
+            if chance <= 30:
+                print(f"{self.name} has evolved into a RANGER")
+                self.max_health += 30
+                self.health = self.max_health
+                self.attack_power += 15
+                self.base_attack_power = self.attack_power
+                self.name = " the Ranger"
+            else:
+                print(f"{self.name}'s evolution attempt failed. Maybe next time...")
+            evolve_chance = random.randint(1, 100)
+            if evolve_chance <= 20 and not opponent.evolved:
+                opponent.evolve()
+            else:
+                print(f"{opponent.name} attempted to evolve... but failed. The darkness stirs.")
         else:
             print("Invalid input.")
             
 class Priest(Character):
     def __init__(self, name):
         super().__init__(name, health=80, attack_power=10)
+        self.base_attack_power = 10
         self.special_limit = 3
         self.special_uses = 0
         
@@ -117,6 +173,7 @@ class Priest(Character):
         print("\nSpecial Abilities:")
         print("1. Max Health Regen")
         print("2. Holy Light")
+        print("3. Attempt Evolution")
         action = input("\nWhich ability do you want to use? ")
         
         if action == '1':
@@ -128,6 +185,22 @@ class Priest(Character):
             opponent.health -= damage
             self.special_uses =+ 1
             print(f"{self.name} uses Holy Light on {opponent.name} and deals {damage} critical damage!")
+        elif action == '3':
+            chance = random.randint(1, 100)
+            if chance <= 30:
+                print(f"{self.name} has evolved into a SAINT")
+                self.max_health += 100
+                self.health = self.max_health
+                self.attack_power += 25
+                self.base_attack_power = self.attack_power
+                self.name = " the Saint"
+            else:
+                print(f"{self.name}'s evolution attempt failed. Maybe next time")
+            evolve_chance = random.randint(1, 100)
+            if evolve_chance <= 20 and not opponent.evolved:
+                opponent.evolve()
+            else:
+                print(f"{opponent.name} attempted to evolve... but failed. The darkness stirs.")
         else:
             print("Invalid input.")
             
@@ -135,10 +208,21 @@ class EvilWizard(Character):
     def __init__(self, name):
         super().__init__(name, health=250, attack_power=15)
         self.stunned = False
+        self.evolved = False
         
     def regenerate(self):
         self.health += 5
         print(f"{self.name} regenerates 5 health! Current health: {self.health}")
+        
+    def evolve(self):
+        if not self.evolved:
+            print(f"{self.name} begins to channel dark energy...")
+            self.health += 100
+            self.max_health += 100
+            self.attack_power += 5
+            self.name += " Ascended"
+            self.evolved = True
+            print(f"{self.name} has evolved into a DARK ARCHMAGE! Health and attack increased")
         
 def create_character():
     print("Choose your character class: ")
