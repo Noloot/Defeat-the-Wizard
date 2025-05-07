@@ -12,7 +12,7 @@
 
    ```bash
    python dark_wizard.py
-Choose your class
+##Choose your class
 
 ⚔️ Warrior – Strong, with berserk mode and deadly strikes.
 
@@ -22,7 +22,7 @@ Choose your class
 
 ✝️ Priest – A healing support class with holy power.
 
-Battle the Dark Wizard
+##Battle the Dark Wizard
 
 Attack, heal, or use special abilities each turn.
 
@@ -30,13 +30,13 @@ Evolve to unlock stronger forms.
 
 Defeat the wizard before Turn 15 — or face his Reborn form with massive power!
 
-Victory or Defeat
+##Victory or Defeat
 
 If you survive and defeat the wizard (or his reborn form), you'll be declared a hero!
 
 After the game ends, you're given a chance to play again.
 
-✨ Features
+##✨ Features
 Turn-based combat system
 
 Unique special abilities per class
@@ -49,19 +49,19 @@ Replay loop for endless gameplay
 
 Clean terminal interface
 
-📦 Requirements
+##📦 Requirements
 Python 3.x
 (No external libraries required — just run it in any Python-supported terminal.)
 
-📁 File
+##📁 File
 dark_wizard.py – Main game script
 
-🙌 Credits
+##🙌 Credits
 Created with passion by Marcquez Tookes
 
 “The fate of the realm lies in your hands...”
 
-💡 Future Ideas
+##💡 Future Ideas
 Multiple enemy types
 
 Inventory system
