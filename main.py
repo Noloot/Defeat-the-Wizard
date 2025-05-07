@@ -1,5 +1,11 @@
 import random
 
+def show_intro():
+    print("\n" + "="*50)
+    print("Welcome to THE DARK WIZARD")
+    print("A turn-based fantasy battle RPG.")
+    print("="*50 + "\n")
+
 class Character:
     def __init__(self,name,health,attack_power):
         self.name = name 
@@ -20,10 +26,10 @@ class Character:
             self.health = min(self.health + heal_amount, self.max_health)
             print(f"{self.name} heals for {heal_amount} health! Current health: {self.health}/{self.max_health}")
         else:
-            print(f"{self.name} iis already at full health!")
+            print(f"{self.name} is already at full health!")
             
     def display_stats(self):
-        print(f"{self.name}'s Ststs - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
+        print(f"{self.name}'s Stats - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
         
 class Warrior(Character):
     def __init__(self, name):
@@ -39,7 +45,7 @@ class Warrior(Character):
             print(f"{self.name} you have used all of your Deadly Strikes")
             return
         print("1. Deadly Strike")
-        print("2. Breserk")
+        print("2. Berserk")
         print("3. Attempt Evolution")
         action = input("\nWhich ability would you like to use? ")
         
@@ -183,7 +189,7 @@ class Priest(Character):
         elif action == '2':
             damage = self.attack_power * 10
             opponent.health -= damage
-            self.special_uses =+ 1
+            self.special_uses += 1
             print(f"{self.name} uses Holy Light on {opponent.name} and deals {damage} critical damage!")
         elif action == '3':
             chance = random.randint(1, 100)
@@ -209,6 +215,7 @@ class EvilWizard(Character):
         super().__init__(name, health=250, attack_power=15)
         self.stunned = False
         self.evolved = False
+        self.revived = False
         
     def regenerate(self):
         self.health += 5
@@ -247,7 +254,13 @@ def create_character():
         return Warrior(name)
     
 def battle(player, wizard):
+    turn_count = 0
+    
     while wizard.health > 0 and player.health > 0:
+        turn_count += 1
+        print("\n" + "-" * 40)
+        print(f"\n---Turn {turn_count}---")
+        print("-" * 40 + "\n")
         print("\n --- Your Turn ---")
         print("1. Attack")
         print("2. Use Special Ability")
@@ -255,6 +268,7 @@ def battle(player, wizard):
         print("4. View Stats")
         
         choice = input("Choose an action: ")
+        print()
         
         if choice == '1':
             player.attack(wizard)
@@ -268,39 +282,56 @@ def battle(player, wizard):
             print("Invalid choice. Try again.")
             
         if isinstance(player, Warrior) and player.berserk_active:
+            player.health -= 5
+            
             if player.special_uses >= player.special_limit:
                 player.attack_power = player.base_attack_power
                 player.berserk_active = False
-                print(f"{player.name}'s Berserk mode has ended. Attack power retored to {player.attack_power}.")
+                print(f"{player.name}'s Berserk mode has ended. Attack power restored to {player.attack_power}.")
             
             print(f"{player.name} loses 5 health due to Berserk and gains *4 attack power! Health: {player.health}, Attack Power: {player.attack_power}")
-            
-            if player.special_uses >= player.special_limit:
-                player.berserk_active = False
-                print(f"{player.name}'s Berserk mode has ended.")
-            
-        if wizard.health > 0:
-            wizard.regenerate()
-            if hasattr(wizard, 'stunned') and wizard.stunned:
-                print(f"{wizard.name} is stunned and skips this turn!")
-                wizard.stunned = False
-            elif isinstance(player, Archer) and getattr(player, 'evade_next', False):
-                print(f"{player.name} evades the attack with Quick Evade!")
-                player.evade_next = False
+                
+        if wizard.health <= 0:
+            if turn_count <= 15 and not wizard.revived:
+                print(f"\n The Dark Wizard rises again, Reborn from the depths of Shadows")
+                wizard.health = 700
+                wizard.max_health = 700
+                wizard.attack_power += 75
+                wizard.name += " (Reborn)"
+                wizard.revived = True
+                continue
             else:
-                wizard.attack(player)
+                if wizard.revived:
+                    print(f"\n {player.name} has triumphed over the Reborn Dark Wizard! Light returns to the realm, and your name is etched into Legend.")
+                else:
+                    print(f"The wizard {wizard.name} has been defeated by {player.name}!")
+                break
+        wizard.regenerate()
+        if wizard.stunned:
+            print(f"{wizard.name} is stunned and skips this turn!")
+            wizard.stunned = False
+        elif isinstance(player,Archer) and player.evade_next:
+            print(f"{player.name} evades the attack with Quick Evade!")
+            player.evade_next = False
+        else:
+            wizard.attack(player)
             
         if player.health <= 0:
             print(f"{player.name} has been defeated!")
             break
-        
-        if wizard.health <= 0:
-            print(f"The wizard {wizard.name} has been defeated by {player.name}!")
             
 def main():
-    player = create_character()
-    wizard = EvilWizard("The Dark Wizard")
-    battle(player, wizard)
+    while True:
+        show_intro()
+        player = create_character()
+        wizard = EvilWizard("The Dark Wizard")
+        battle(player, wizard)
+        
+        play_again = input("\nWould you like to play again? (y/n): ").lower()
+        if play_again != 'y':
+            print("\nThanks for playing THE DARK WIZARD! Farewell, hero.\n")
+            print("Game created by Marcquez Tookes")
+            break
     
 if __name__ == "__main__":
     main()
