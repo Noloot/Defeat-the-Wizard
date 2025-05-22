@@ -1,71 +1,57 @@
-# 🧙 THE DARK WIZARD
+# 🧙 The Dark Wizard - A GUI-Based RPG
 
-**A terminal-based fantasy RPG** written in Python where you face off against a powerful dark sorcerer in a turn-based battle. Choose your class, use special abilities, and try to defeat the Dark Wizard before he resurrects even stronger!
+**The Dark Wizard** is a turn-based fantasy RPG built with Python and Tkinter. Assemble your party of heroes and defeat the Dark Wizard using strategic attacks, healing, and class-based special abilities.
 
 ---
 
-## 🎮 How to Play
+## 🎮 Features
 
-1. **Run the game**  
-   Make sure you have Python 3 installed.  
-   Open a terminal and run:
+- 🎭 **Character Classes**: Choose from Warrior, Mage, Archer, and Priest—each with unique powers and evolution paths.
+- 🧙‍♂️ **Epic Boss Battle**: Face off against the powerful Dark Wizard with your custom-built team.
+- 🧠 **Turn-Based Combat**: Tactical gameplay with rotating turns for each party member.
+- 🎨 **Graphical Interface**: Built using Tkinter with dedicated screens for intro, party setup, and dynamic battle sequences.
+- 📜 **Battle Log**: Scrollable log keeps track of every move, healing, and special power used in the fight.
 
+---
+
+## 🚀 How to Run
+
+1. **Clone the Repository**  
    ```bash
-   python dark_wizard.py
-## Choose your class
+   git clone https://github.com/your-username/dark-wizard-rpg.git
+   cd dark-wizard-rpg
+Run the Game
+Make sure you have Python 3.x installed, then run:
 
-⚔️ Warrior – Strong, with berserk mode and deadly strikes.
+bash
+Copy
+Edit
+python app.py
+🧝 Character Classes
+Class	Description	Special Abilities
+Warrior	High health and strength	Deadly Strike, Berserk, Attempt Evolution
+Mage	Strong AoE and elemental attacks	Meteor Strike, Ice Storm, Evolution
+Archer	Agile and precise	Arrow Rain, Quick Evade, Evolution
+Priest	Support-based, healing and light magic	Max Health Regen, Holy Light, Evolution
 
-🔮 Mage – Powerful attacks and a chance to stun the enemy.
+## 📸 Screenshots
+(Optional — Add screenshots of your GUI if you want!)
 
-🏹 Archer – Agile with evasion and arrow rain abilities.
+🛠️ Technologies Used
+Python 3
 
-✝️ Priest – A healing support class with holy power.
+Tkinter (for GUI)
 
-## Battle the Dark Wizard
+OOP principles for characters, abilities, and game logic
 
-Attack, heal, or use special abilities each turn.
+## ✨ Upcoming Features
+Enemy variety and multiple bosses
 
-Evolve to unlock stronger forms.
+Inventory and items
 
-Defeat the wizard before Turn 15 — or face his Reborn form with massive power!
+Save/load system
 
-## Victory or Defeat
+Custom difficulty modes
 
-If you survive and defeat the wizard (or his reborn form), you'll be declared a hero!
-
-After the game ends, you're given a chance to play again.
-
-## ✨ Features
-Turn-based combat system
-
-Unique special abilities per class
-
-Evolution mechanic with randomized success
-
-Dark Wizard resurrection mechanic (if defeated too early)
-
-Replay loop for endless gameplay
-
-Clean terminal interface
-
-## 📦 Requirements
-Python 3.x
-(No external libraries required — just run it in any Python-supported terminal.)
-
-## 📁 File
-dark_wizard.py – Main game script
-
-## 🙌 Credits
-Created with passion by Marcquez Tookes
-
-“The fate of the realm lies in your hands...”
-
-## 💡 Future Ideas
-Multiple enemy types
-
-Inventory system
-
-Save/load game progress
-
-Expanded storyline with quest paths
+## 🤝 Contributions
+This project is being developed by Marcquez Tookes as a passion project and technical showcase. Contributions and feedback are always welcome!
