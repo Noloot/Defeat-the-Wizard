@@ -34,8 +34,7 @@ Mage	Strong AoE and elemental attacks	Meteor Strike, Ice Storm, Evolution
 Archer	Agile and precise	Arrow Rain, Quick Evade, Evolution
 Priest	Support-based, healing and light magic	Max Health Regen, Holy Light, Evolution
 
-## 📸 Screenshots
-(Optional — Add screenshots of your GUI if you want!)
+## 📸 Screenshots 
 
 🛠️ Technologies Used
 Python 3
