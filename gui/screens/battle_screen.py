@@ -31,9 +31,6 @@ class BattleScreen(tk.Frame):
         self.turn_label = tk.Label(self, text=f"{self.player.name}'s Turn", font=("Arial", 14), fg="yellow", bg="black")
         self.turn_label.pack(pady=5)
         
-        self.player_stats = tk.Label(self, text=self.get_player_stats(), font=("Arial", 14), fg="lightgreen", bg="black")
-        self.player_stats.pack(pady=5)
-        
         self.wizard_stats = tk.Label(self, text=self.get_wizard_stats(), font=("Arial", 14), fg="lightcoral", bg="black")
         self.wizard_stats.pack(pady=5)
         
@@ -63,6 +60,8 @@ class BattleScreen(tk.Frame):
         return f"{self.player.name}: {self.player.health}/{self.player.max_health} HP | Power: {self.player.attack_power}"
     
     def get_wizard_stats(self):
+        if self.wizard.health <= 0:
+            return f"{self.wizard.name}: DEFEATED"
         return f"{self.wizard.name}: {self.wizard.health}/{self.wizard.max_health} HP | Power: {self.wizard.attack_power}"
     
     def update_stats(self):
@@ -87,6 +86,7 @@ class BattleScreen(tk.Frame):
         
     def attack(self):
         self.attack_callback()
+        self.wizard_stats.config(text=self.get_wizard_stats())
         self.log_message(f"{self.player.name} attacks {self.wizard.name}!")
         self.status.config(text=f"{self.player.name} attacks!")
         self.check_battle_state()
