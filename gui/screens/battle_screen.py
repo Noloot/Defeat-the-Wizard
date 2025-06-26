@@ -1,5 +1,19 @@
 import tkinter as tk
 from tkinter import messagebox
+import pygame
+import math
+import numpy
+
+def make_beep_sound(frequency=440, duration_ms=100, volume=0.5):
+    if not pygame.mixer.get_init():
+        pygame.mixer.init()
+    sample_rate = 44100
+    n_samples = int(round(duration_ms * sample_rate/1000))
+    waveform = (volume * (2**15 - 1) *
+                    numpy.sin(2.0 * math.pi * frequency * numpy.arange(n_samples)/sample_rate)
+                ).astype(numpy.int16)
+    stereo_waveform = numpy.column_stack((waveform, waveform))
+    return pygame.sndarray.make_sound(stereo_waveform)
 
 class BattleScreen(tk.Frame):
     def __init__(self, parent, controller, party, wizard, attack_callback, special_callback, heal_callback):
@@ -12,6 +26,20 @@ class BattleScreen(tk.Frame):
         self.attack_callback = attack_callback
         self.special_callback = special_callback
         self.heal_callback = heal_callback
+        self.attack_sound = make_beep_sound(600, 80)
+        
+        class_name = self.player.__class__.__name__.lower()
+        
+        if class_name == "warrior":
+            self.attack_sound = make_beep_sound(300, 120)
+        elif class_name == "mage":
+            self.attack_sound = make_beep_sound(800, 150)
+        elif class_name == "archer":
+            self.attack_sound = make_beep_sound(1000, 70)
+        elif class_name == "priest":
+            self.attack_sound = make_beep_sound(900, 180)
+        else:
+            self.attack_sound = make_beep_sound(600, 100)
         
         
         self.configure(bg="black")
@@ -84,7 +112,18 @@ class BattleScreen(tk.Frame):
     def update_turn_label(self):
         self.turn_label.config(text=f"{self.player.name}'s Turn")
         
+    def class_attack_sound(self, class_name):
+        sounds = {
+            "warrior": make_beep_sound(300, 120),
+            "mage": make_beep_sound(800, 150),
+            "archer": make_beep_sound(1000, 70),
+            "priest": make_beep_sound(900, 180)
+        }
+        return sounds.get(class_name, make_beep_sound(600, 100))
+        
     def attack(self):
+        class_name = self.player.__class__.__name__.lower()
+        self.class_attack_sound(class_name).play()
         self.attack_callback()
         self.wizard_stats.config(text=self.get_wizard_stats())
         self.log_message(f"{self.player.name} attacks {self.wizard.name}!")
