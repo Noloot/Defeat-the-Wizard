@@ -49,4 +49,9 @@ class DifficultySelectScreen(tk.Frame):
 
     def select_difficulty(self, stats):
         print(f"{self.player_name} the {self.selected_class} chose difficulty with stats: {stats}")
-        self.controller.show_game_mode_screen(self.player_name, self.selected_class, stats)
+        self.controller.start_game(
+            mode="solo",
+            player_name=self.player_name,
+            selected_class=self.selected_class,
+            difficulty=stats
+        )

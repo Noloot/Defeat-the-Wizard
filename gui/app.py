@@ -23,7 +23,6 @@ class DarkWizardApp(tk.Tk):
         self.active_index = 0
         self.wizard = None
         
-        
         self.show_intro_screen()
         
     def get_active_player(self):
@@ -74,7 +73,7 @@ class DarkWizardApp(tk.Tk):
         for widget in self.container.winfo_children():
             widget.destroy()
         
-    def start_game(self, mode, player_name, selected_class, difficulty):
+    def start_game(self, mode, player_name, selected_class, difficulty, custom_party=None):
         print(f"Starting game with mode: {mode}, player: {player_name}, class: {selected_class}, difficulty: {difficulty}")
         
         from characters.warrior import Warrior
@@ -82,7 +81,6 @@ class DarkWizardApp(tk.Tk):
         from characters.archer import Archer
         from characters.priest import Priest
         from characters.evil_wizard import EvilWizard
-        from gui.screens.battle_screen import BattleScreen
         
         class_map = {
             "warrior": Warrior,
@@ -91,12 +89,16 @@ class DarkWizardApp(tk.Tk):
             "priest": Priest
         }
         
-        player_class = class_map[selected_class.lower()]
-        player = player_class(player_name)
         
         wizard = EvilWizard("The Dark Wizard", **difficulty)
         
         if mode == "solo":
+            if not player_name or not selected_class:
+                raise ValueError("Solo mode requires player name and class.")
+            
+            player_class = class_map[selected_class.lower()]
+            player = player_class(player_name)
+            
             self.show_battle_screen(
                 player, 
                 wizard,
@@ -104,8 +106,11 @@ class DarkWizardApp(tk.Tk):
                 special_callback=None,
                 heal_callback=player.heal
             )
+            
         elif mode == "party":
-            party = [
+            if not custom_party:
+                print("No custom party provided. Falling back to default.")
+            party = custom_party if custom_party else [
                 Warrior("Ragnar"),
                 Mage("Elira"),
                 Archer("Thorne"),
@@ -123,6 +128,7 @@ class DarkWizardApp(tk.Tk):
                 special_callback=None,
                 heal_callback=self.heal_current
             )
+            
         else:
             print("Unknown game mode.")
             

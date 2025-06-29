@@ -46,10 +46,6 @@ class PartySelectionScreen(tk.Frame):
             messagebox.showwarning("missing Name", "Please enter a name for your character.")
             return
         
-        if len(self.party_members) >= self.max_party_size:
-            messagebox.showwarning("Party Full", "You can only have up to 4 members in your party.")
-            return
-        
         if char_class.lower() == "warrior":
             character = Warrior(name)
         elif char_class.lower() == "mage":
@@ -62,7 +58,19 @@ class PartySelectionScreen(tk.Frame):
             messagebox.showerror("Error", "Invalid class selected.")
             return
         
-        self.party_members.append(character)
+        replaced = False
+        for i, member in enumerate(self.party_members):
+            if isinstance(member, type(character)):
+                self.party_members[i] = character
+                replaced = True
+                break
+        
+        if not replaced:
+            if len(self.party_members) >= self.max_party_size:
+                messagebox.showwarning("Party Full", "You can only have up to 4 members in your party.")
+                return
+            self.party_members.append(character)
+            
         self.update_party_display()
         self.name_entry.delete(0, tk.END)
     
@@ -74,7 +82,13 @@ class PartySelectionScreen(tk.Frame):
         
     def start_battle(self):
         if not self.party_members:
-            messagebox.showwarning("No Party", "You must add at least one character to start the battle.")
+            tk.messagebox.showwarning("No Party", "You must add at least one character to start the battle.")
             return
         
-        self.controller.start_party_battle(self.party_members)
+        self.controller.start_game(
+            mode="party",
+            player_name=None,
+            selected_class=None,
+            difficulty={"health": 250, "attack_power": 25},
+            custom_party=self.party_members
+        )

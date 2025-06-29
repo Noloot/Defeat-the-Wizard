@@ -150,11 +150,6 @@ class BattleScreen(tk.Frame):
         elif class_name == "archer":
             self.show_archer_specials()
             
-    # def hide_special_options(self):
-    #     print("Hiding specials, showing main action buttons")
-    #     self.special_frame.pack_forget()
-    #     self.action_btn_frame.pack(pady=10)
-    
     # Warrior Powers
     def show_warrior_specials(self):
         # Add Deadly Strike
