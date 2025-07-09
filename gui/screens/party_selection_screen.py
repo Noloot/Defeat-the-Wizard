@@ -85,10 +85,9 @@ class PartySelectionScreen(tk.Frame):
             tk.messagebox.showwarning("No Party", "You must add at least one character to start the battle.")
             return
         
-        self.controller.start_game(
-            mode="party",
-            player_name=None,
+        self.controller.show_difficulty_selection(
+            character_name=None,
             selected_class=None,
-            difficulty={"health": 250, "attack_power": 25},
-            custom_party=self.party_members
+            mode="party"
         )
+        self.controller.pending_party = self.party_members

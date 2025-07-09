@@ -18,6 +18,7 @@ class DarkWizardApp(tk.Tk):
         
         self.selected_class = None
         self.character_name = None
+        self.pending_party = None
         
         self.party = []
         self.active_index = 0
@@ -51,9 +52,9 @@ class DarkWizardApp(tk.Tk):
         self._clear_screen()
         CharacterSelectScreen(self.container, self).pack(fill="both", expand=True)
         
-    def show_difficulty_selection(self, character_name, selected_class):
+    def show_difficulty_selection(self, character_name, selected_class, mode="solo"):
         self._clear_screen()
-        DifficultySelectScreen(self.container, self, character_name, selected_class).pack(fill="both", expand=True)
+        DifficultySelectScreen(self.container, self, character_name, selected_class, mode).pack(fill="both", expand=True)
         
     def show_party_select_screen(self):
         self._clear_screen()
@@ -110,11 +111,11 @@ class DarkWizardApp(tk.Tk):
         elif mode == "party":
             if not custom_party:
                 print("No custom party provided. Falling back to default.")
-            party = custom_party if custom_party else [
-                Warrior("Ragnar"),
-                Mage("Elira"),
-                Archer("Thorne"),
-                Priest("Luna")
+            party = custom_party if custom_party else self.pending_party or [
+                Warrior("Ragnar", **difficulty),
+                Mage("Elira", **difficulty),
+                Archer("Thorne", **difficulty),
+                Priest("Luna", **difficulty)
             ]
             
             self.party = party

@@ -40,7 +40,9 @@ class BattleScreen(tk.Frame):
             "deadly_strike": pygame.mixer.Sound(os.path.join("sounds", "Deadly_Strike.wav")),
             "berserk": pygame.mixer.Sound(os.path.join("sounds", "berserk.wav")),
             "evolution": pygame.mixer.Sound(os.path.join("sounds", "evolution_success.wav")),
-            "failed_evolution": pygame.mixer.Sound(os.path.join("sounds", "failed_evolution.wav"))
+            "failed_evolution": pygame.mixer.Sound(os.path.join("sounds", "failed_evolution.wav")),
+            "meteor_strike": pygame.mixer.Sound(os.path.join("sounds", "meteor.ogg")),
+            "ice_storm": pygame.mixer.Sound(os.path.join("sounds", "ice_storm.wav"))
         }
         
         self.configure(bg="black")
@@ -298,6 +300,7 @@ class BattleScreen(tk.Frame):
     
     def use_meteor_strike(self):
         result = self.player.use_meteor_strike(self.wizard)
+        self.special_sounds["meteor_strike"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -306,6 +309,7 @@ class BattleScreen(tk.Frame):
         
     def use_ice_storm(self):
         result = self.player.use_ice_storm(self.wizard)
+        self.special_sounds["ice_storm"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()

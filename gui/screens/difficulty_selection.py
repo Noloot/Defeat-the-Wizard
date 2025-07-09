@@ -1,11 +1,12 @@
 import tkinter as tk
 
 class DifficultySelectScreen(tk.Frame):
-    def __init__(self, parent, controller, player_name, selected_class):
+    def __init__(self, parent, controller, player_name, selected_class, mode):
         super().__init__(parent)
         self.controller = controller
         self.player_name = player_name
         self.selected_class = selected_class
+        self.mode = mode
         
         self.configure(bg="black")
         
@@ -50,7 +51,7 @@ class DifficultySelectScreen(tk.Frame):
     def select_difficulty(self, stats):
         print(f"{self.player_name} the {self.selected_class} chose difficulty with stats: {stats}")
         self.controller.start_game(
-            mode="solo",
+            mode=self.mode,
             player_name=self.player_name,
             selected_class=self.selected_class,
             difficulty=stats
