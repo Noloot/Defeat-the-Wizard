@@ -42,7 +42,9 @@ class BattleScreen(tk.Frame):
             "evolution": pygame.mixer.Sound(os.path.join("sounds", "evolution_success.wav")),
             "failed_evolution": pygame.mixer.Sound(os.path.join("sounds", "failed_evolution.wav")),
             "meteor_strike": pygame.mixer.Sound(os.path.join("sounds", "meteor.ogg")),
-            "ice_storm": pygame.mixer.Sound(os.path.join("sounds", "ice_storm.wav"))
+            "ice_storm": pygame.mixer.Sound(os.path.join("sounds", "ice_storm.wav")),
+            "healing": pygame.mixer.Sound(os.path.join("sounds", "healing.wav")),
+            "max_heal": pygame.mixer.Sound(os.path.join("sounds", "max_heal.wav"))
         }
         
         self.configure(bg="black")
@@ -320,6 +322,7 @@ class BattleScreen(tk.Frame):
     
     def use_max_health_regen(self):
         result = self.player.use_max_health_regen()
+        self.special_sounds["max_heal"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -371,6 +374,7 @@ class BattleScreen(tk.Frame):
         
     def heal(self):
         self.heal_callback()
+        self.special_sounds["healing"].play()
         self.log_message(f"{self.player.name} heals.")
         self.status.config(text=f"{self.player.name} heals.")
         self.update_stats()
