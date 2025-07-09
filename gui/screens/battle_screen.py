@@ -3,6 +3,7 @@ from tkinter import messagebox
 import pygame
 import math
 import numpy
+import os
 
 def make_beep_sound(frequency=440, duration_ms=100, volume=0.5):
     if not pygame.mixer.get_init():
@@ -26,21 +27,21 @@ class BattleScreen(tk.Frame):
         self.attack_callback = attack_callback
         self.special_callback = special_callback
         self.heal_callback = heal_callback
-        self.attack_sound = make_beep_sound(600, 80)
+        pygame.mixer.init()
         
-        class_name = self.player.__class__.__name__.lower()
+        self.attack_sounds = {
+            "warrior": pygame.mixer.Sound(os.path.join("sounds", "slash1.ogg")),
+            "mage": pygame.mixer.Sound(os.path.join("sounds", "mage.wav")),
+            "archer": pygame.mixer.Sound(os.path.join("sounds", "arrow.wav")),
+            "priest": pygame.mixer.Sound(os.path.join("sounds", "priest.wav"))
+        }
         
-        if class_name == "warrior":
-            self.attack_sound = make_beep_sound(300, 120)
-        elif class_name == "mage":
-            self.attack_sound = make_beep_sound(800, 150)
-        elif class_name == "archer":
-            self.attack_sound = make_beep_sound(1000, 70)
-        elif class_name == "priest":
-            self.attack_sound = make_beep_sound(900, 180)
-        else:
-            self.attack_sound = make_beep_sound(600, 100)
-        
+        self.special_sounds = {
+            "deadly_strike": pygame.mixer.Sound(os.path.join("sounds", "Deadly_Strike.wav")),
+            "berserk": pygame.mixer.Sound(os.path.join("sounds", "berserk.wav")),
+            "evolution": pygame.mixer.Sound(os.path.join("sounds", "evolution_success.wav")),
+            "failed_evolution": pygame.mixer.Sound(os.path.join("sounds", "failed_evolution.wav"))
+        }
         
         self.configure(bg="black")
         
@@ -112,18 +113,14 @@ class BattleScreen(tk.Frame):
     def update_turn_label(self):
         self.turn_label.config(text=f"{self.player.name}'s Turn")
         
-    def class_attack_sound(self, class_name):
-        sounds = {
-            "warrior": make_beep_sound(300, 120),
-            "mage": make_beep_sound(800, 150),
-            "archer": make_beep_sound(1000, 70),
-            "priest": make_beep_sound(900, 180)
-        }
-        return sounds.get(class_name, make_beep_sound(600, 100))
-        
     def attack(self):
         class_name = self.player.__class__.__name__.lower()
-        self.class_attack_sound(class_name).play()
+        
+        if class_name in self.attack_sounds:
+            self.attack_sounds[class_name].play()
+        else:
+            make_beep_sound().play()
+            
         self.attack_callback()
         self.wizard_stats.config(text=self.get_wizard_stats())
         self.log_message(f"{self.player.name} attacks {self.wizard.name}!")
@@ -280,6 +277,7 @@ class BattleScreen(tk.Frame):
     
     def use_deadly_strike(self):
         result = self.player.use_deadly_strike(self.wizard)
+        self.special_sounds["deadly_strike"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -288,6 +286,7 @@ class BattleScreen(tk.Frame):
 
     def activate_berserk(self):
         result = self.player.activate_berserk()
+        self.special_sounds["berserk"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -352,6 +351,12 @@ class BattleScreen(tk.Frame):
     def attempt_evolution(self):
         result = self.player.attempt_evolution(self.wizard)
         self.log_message(result)
+        
+        if "success" in result.lower() or "evolved" in result.lower():
+            self.special_sounds["evolution"].play()
+        else:
+            self.special_sounds["failed_evolution"].play()
+            
         self.status.config(text="Evolution attempt finished.")
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
