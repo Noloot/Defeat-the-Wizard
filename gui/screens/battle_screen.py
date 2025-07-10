@@ -111,6 +111,21 @@ class BattleScreen(tk.Frame):
     def get_individual_stats(self, player):
         return f"{player.name}: {player.health}/{player.max_health} HP | Power: {player.attack_power}"
         
+    def show_main_combat_options(self):
+        for widget in self.action_btn_frame.winfo_children():
+            widget.destroy()
+            
+        tk.Button(self.action_btn_frame, text="Attack", command=self.attack).pack(pady=10)
+        tk.Button(self.action_btn_frame, text="Special", command=self.special).pack(pady=10)
+        tk.Button(self.action_btn_frame, text="Heal", command=self.heal).pack(pady=10)
+    
+    def cancel_special_selection(self):
+        self.special_frame.pack_forget()
+        self.action_btn_frame.pack(pady=10)
+        self.show_main_combat_options()
+        self.status.config(text="Choose your action")
+        self.log_message(f"{self.player.name} canceled their special selection.")
+        
     def log_message(self, message):
         self.battle_log.configure(state="normal")
         self.battle_log.insert("end", message + "\n")
@@ -185,7 +200,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Cancel",
             font=("Arial", 12),
-            command=lambda: [self.special_frame.pack_forget(), self.action_btn_frame.pack(pady=10)]
+            command=self.cancel_special_selection
         ).pack(pady=5)
 
         self.status.config(text="Choose a special ability")
@@ -217,7 +232,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Cancel",
             font=("Arial", 12),
-            command=lambda: [self.special_frame.pack_forget(), self.action_btn_frame.pack(pady=10)]
+            command=self.cancel_special_selection
         ).pack(pady=5)
     
     # Priest Power
@@ -247,7 +262,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Cancel",
             font=("Arial", 12),
-            command=lambda: [self.special_frame.pack_forget(), self.action_btn_frame.pack(pady=10)]
+            command=self.cancel_special_selection
         ).pack(pady=5)
         
     # Archer Power
@@ -277,7 +292,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Cancel",
             font=("Arial", 12),
-            command=lambda: [self.special_frame.pack_forget(), self.action_btn_frame.pack(pady=10)]
+            command=self.cancel_special_selection
         ).pack(pady=5)      
     
     # Warrior Specials
