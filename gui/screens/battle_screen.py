@@ -44,7 +44,10 @@ class BattleScreen(tk.Frame):
             "meteor_strike": pygame.mixer.Sound(os.path.join("sounds", "meteor.ogg")),
             "ice_storm": pygame.mixer.Sound(os.path.join("sounds", "ice_storm.wav")),
             "healing": pygame.mixer.Sound(os.path.join("sounds", "healing.wav")),
-            "max_heal": pygame.mixer.Sound(os.path.join("sounds", "max_heal.wav"))
+            "max_heal": pygame.mixer.Sound(os.path.join("sounds", "max_heal.wav")),
+            "arrow_rain": pygame.mixer.Sound(os.path.join("sounds", "arrow_rain.wav")),
+            "quick_evade": pygame.mixer.Sound(os.path.join("sounds", "quick_evade.wav")),
+            "holy_light": pygame.mixer.Sound(os.path.join("sounds", "holy_light.wav"))
         }
         
         self.configure(bg="black")
@@ -331,6 +334,7 @@ class BattleScreen(tk.Frame):
         
     def use_holy_light(self):
         result = self.player.use_holy_light(self.wizard)
+        self.special_sounds["holy_light"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -341,6 +345,7 @@ class BattleScreen(tk.Frame):
     
     def use_arrow_rain(self):
         result = self.player.use_arrow_rain(self.wizard)
+        self.special_sounds["arrow_rain"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
@@ -349,6 +354,7 @@ class BattleScreen(tk.Frame):
         
     def use_quick_evade(self):
         result = self.player.use_quick_evade(self.wizard)
+        self.special_sounds["quick_evade"].play()
         self.log_message(result)
         self.status.config(text=result)
         self.special_frame.pack_forget()
