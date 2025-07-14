@@ -10,15 +10,18 @@ class Mage(Character):
         
     def use_meteor_strike(self, opponent):
         if self.special_uses >= self.special_limit:
-            return f"{self.name} has used all of their Meteor Strikes"
+            return f"{self.name} has used all of their special use(s)"
         damage = self.attack_power * 4
         opponent.health -= damage
         self.special_uses += 1
-        return f"{self.name} drops a meteor on {opponent.name}'s head and does {int(damage)} damage!"
+        return f"{self.name} drops a meteor on {opponent.name}'s head and does {int(damage)} damage! ({self.special_limit - self.special_uses} use(s) left)"
     
     def use_ice_storm(self, opponent):
+        if self.special_uses >= self.special_limit:
+            return f"{self.name} has used all of their special use(s)"
+        self.special_uses += 1
         opponent.stunned = True
-        return f"{self.name} casts Ice Storm! {opponent.name} is stunned and cannot attack next turn!"
+        return f"{self.name} casts Ice Storm! {opponent.name} is stunned and cannot attack next turn! ({self.special_limit - self.special_uses} use(s) left)"
     
     def attempt_evolution(self, opponent):
         result = ""

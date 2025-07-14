@@ -4,6 +4,7 @@ from gui.screens.name_input_screen import NameInputScreen
 from gui.screens.character_creation import CharacterSelectScreen
 from gui.screens.difficulty_selection import DifficultySelectScreen
 from gui.screens.game_mode_screen import GameModeScreen
+from gui.screens.end_screen import EndScreen
 
 
 class DarkWizardApp(tk.Tk):
@@ -69,6 +70,10 @@ class DarkWizardApp(tk.Tk):
         self._clear_screen()
         from gui.screens.battle_screen import BattleScreen
         BattleScreen(self.container, self, player, wizard, attack_callback, special_callback, heal_callback).pack(fill="both", expand=True)
+        
+    def show_end_screen(self, message, selected_class=None):
+        self._clear_screen()
+        EndScreen(self.container, self, message, selected_class).pack(fill="both", expand=True)
         
     def _clear_screen(self):
         for widget in self.container.winfo_children():
@@ -148,7 +153,6 @@ class DarkWizardApp(tk.Tk):
             special_callback=None,
             heal_callback=self.heal_current
         )
-    
 if __name__ == "__main__":
     app = DarkWizardApp()
     app.mainloop()

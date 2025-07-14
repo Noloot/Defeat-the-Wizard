@@ -15,12 +15,12 @@ class Archer(Character):
         damage = self.attack_power * 2
         opponent.health -= damage
         self.special_uses += 1
-        return f"{self.name} rains arrows down from the heavens and surrounds {opponent.name} with no escape and deals {damage} damage!"
+        return f"{self.name} rains arrows down from the heavens and surrounds {opponent.name} with no escape and deals {damage} damage! ({self.special_limit - self.special_uses} use(s) left)"
     
     def use_quick_evade(self, opponent):
         self.evade_next = True
         self.special_uses += 1
-        return f"{self.name} evaded the {opponent.name}'s next attack!"
+        return f"{self.name} evaded the {opponent.name}'s next attack! ({self.special_limit - self.special_uses} use(s) left)"
     
     def attempt_evolution(self, opponent):
         result = ""

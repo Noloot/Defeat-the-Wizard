@@ -149,6 +149,9 @@ class BattleScreen(tk.Frame):
         self.status.config(text=f"{self.player.name} attacks!")
         self.check_battle_state()
         
+    def update_wizard_stats(self):
+        self.wizard_stats.config(text=self.get_wizard_stats())
+        
     def special(self):
     # Hide the action buttons
         self.action_btn_frame.pack_forget()
@@ -171,11 +174,13 @@ class BattleScreen(tk.Frame):
             
     # Warrior Powers
     def show_warrior_specials(self):
+        warrior = self.player
         # Add Deadly Strike
         tk.Button(
             self.special_frame,
             text="Deadly Strike",
             font=("Arial", 12),
+            state="disabled" if warrior.special_uses >= warrior.special_limit else "normal",
             command=self.use_deadly_strike
         ).pack(pady=5)
 
@@ -184,6 +189,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Berserk",
             font=("Arial", 12),
+            state="disabled" if warrior.special_uses >= warrior.special_limit else "normal",
             command=self.activate_berserk
         ).pack(pady=5)
 
@@ -207,10 +213,12 @@ class BattleScreen(tk.Frame):
         
     # Mage Powers
     def show_mage_specials(self):
+        mage = self.player
         tk.Button(
             self.special_frame,
             text="Meteor Strike",
             font=("Arial", 12),
+            state="disabled" if mage.special_uses >= mage.special_limit else "normal",
             command=self.use_meteor_strike
         ).pack(pady=5)
         
@@ -218,6 +226,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Ice Storm",
             font=("Arial", 12),
+            state="disabled" if mage.special_uses >= mage.special_limit else "normal",
             command=self.use_ice_storm
         ).pack(pady=5)
         
@@ -237,10 +246,12 @@ class BattleScreen(tk.Frame):
     
     # Priest Power
     def show_priest_specials(self):
+        priest = self.player
         tk.Button(
             self.special_frame,
             text="Max Health Regen",
             font=("Arial", 12),
+            state="disabled" if priest.special_uses >= priest.special_limit else "normal",
             command=self.use_max_health_regen
         ).pack(pady=5)
         
@@ -248,6 +259,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Holy Light",
             font=("Arial", 12),
+            state="disabled" if priest.special_uses >= priest.special_limit else "normal",
             command=self.use_holy_light
         ).pack(pady=5)
         
@@ -267,10 +279,12 @@ class BattleScreen(tk.Frame):
         
     # Archer Power
     def show_archer_specials(self):
+        archer = self.player
         tk.Button(
             self.special_frame,
             text="Arrow Rain",
             font=("Arial", 12),
+            state="disabled" if archer.special_uses >= archer.special_limit else "normal",
             command=self.use_arrow_rain
         ).pack(pady=5)
         
@@ -278,6 +292,7 @@ class BattleScreen(tk.Frame):
             self.special_frame,
             text="Quick Evade",
             font=("Arial", 12),
+            state="disabled" if archer.special_uses >= archer.special_limit else "normal",
             command=self.use_quick_evade
         ).pack(pady=5)
         
@@ -304,6 +319,7 @@ class BattleScreen(tk.Frame):
         self.status.config(text=result)
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
+        self.update_wizard_stats()
         self.check_battle_state()
 
     def activate_berserk(self):
@@ -325,6 +341,7 @@ class BattleScreen(tk.Frame):
         self.status.config(text=result)
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
+        self.update_wizard_stats()
         self.check_battle_state()
         
     def use_ice_storm(self):
@@ -339,10 +356,11 @@ class BattleScreen(tk.Frame):
     # Priest Special
     
     def use_max_health_regen(self):
-        result = self.player.use_max_health_regen()
+        result = self.player.use_max_health_regen(self.party)
         self.special_sounds["max_heal"].play()
         self.log_message(result)
         self.status.config(text=result)
+        self.update_stats()
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
         self.check_battle_state()
@@ -354,6 +372,7 @@ class BattleScreen(tk.Frame):
         self.status.config(text=result)
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
+        self.update_wizard_stats()
         self.check_battle_state()
     
     # Archer Special
@@ -365,6 +384,7 @@ class BattleScreen(tk.Frame):
         self.status.config(text=result)
         self.special_frame.pack_forget()
         self.action_btn_frame.pack(pady=10)
+        self.update_wizard_stats()
         self.check_battle_state()
         
     def use_quick_evade(self):
@@ -405,16 +425,21 @@ class BattleScreen(tk.Frame):
         self.log_message("-" * 50)
         
         if self.wizard.health <= 0:
-            messagebox.showinfo("Victory", f"{self.player.name} has defeated the Dark Wizard!")
-            self.controller.show_intro_screen()
+            self.controller.show_end_screen(
+                f"{self.player.name} has defeated the Dark Wizard!\nVictory is yours!",
+                selected_class=self.player.__class__.__name__.lower()
+            )
             return
             
         if all(p.health <= 0 for p in self.party):
-            messagebox.showerror("Defeat", "The entire party has fallen")
-            self.controller.show_intro_screen()
+            self.controller.show_end_screen("Your entire party has fallen.\nThe Dark Wizard prevails...")
             return
         
         self.wizard_turn()
+        
+        if all(p.health <= 0 for p in self.party):
+            self.controller.show_end_screen("Your entire party has fallen.\nThe Dark Wizard prevails...")
+            return
         
         while True:
             self.active_index = (self.active_index + 1) % len(self.party)
@@ -438,3 +463,10 @@ class BattleScreen(tk.Frame):
         
         if self.player.health <= 0:
             self.log_message(f"{self.player.name} has fallen in battle!")
+            
+            if all(p.health <= 0 for p in self.party):
+                self.controller.show_end_screen("Your entire party has fallen.\nThe Dark Wizard prevails...")
+                return
+
+            return
+        

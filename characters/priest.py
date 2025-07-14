@@ -8,16 +8,28 @@ class Priest(Character):
         self.special_limit = 3
         self.special_uses = 0
         
-    def use_max_health_regen(self):
-        self.health = self.max_health
-        self.special_uses += 1
-        return f"{self.name} has been fully healed to {self.health} health!"
+    def use_max_health_regen(self, party):
+        if self.special_uses >= 2:
+            return f"{self.name} has no uses of Max Health Regen left!"
         
+        healed_names = []
+        
+        for member in party:
+            member.health = member.max_health
+            healed_names.append(member.name)
+        
+        if self not in party:
+            self.health = self.max_health
+            healed_names.append(self.name)
+            
+        self.special_uses += 1
+        return f"{self.name} used Max Health Regen! Healed: {', '.join(healed_names)}. ({2 - self.special_uses} use(s) left)"
+    
     def use_holy_light(self, opponent):
         damage = self.attack_power * 10
         opponent.health -= damage
         self.special_uses += 1
-        return f"{self.name} uses Holy Light on {opponent.name} and deals {damage} critical damage!"
+        return f"{self.name} uses Holy Light on {opponent.name} and deals {damage} critical damage! ({self.special_limit - self.special_uses} use(s) left)"
         
     def attempt_evolution(self, opponent):
         result = ""

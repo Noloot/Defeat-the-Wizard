@@ -15,7 +15,7 @@ class Warrior(Character):
         damage = self.attack_power * 2.5
         opponent.health -= damage
         self.special_uses += 1
-        return f"{self.name} strikes {opponent.name} and does {int(damage)} damage!"
+        return f"{self.name} strikes {opponent.name} and does {int(damage)} damage! ({self.special_limit - self.special_uses} use(s) left)"
 
     def activate_berserk(self):
         if self.special_uses >= self.special_limit:
@@ -23,7 +23,7 @@ class Warrior(Character):
         self.berserk_active = True
         self.attack_power = self.base_attack_power * 4
         self.special_uses += 1
-        return f"{self.name} enters Berserk mode! Attack power is now {self.attack_power}!"
+        return f"{self.name} enters Berserk mode! Attack power is now {self.attack_power}! ({self.special_limit - self.special_uses} use(s) left)"
 
     def attempt_evolution(self, opponent):
         result = ""
