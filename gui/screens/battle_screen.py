@@ -427,7 +427,8 @@ class BattleScreen(tk.Frame):
         if self.wizard.health <= 0:
             self.controller.show_end_screen(
                 f"{self.player.name} has defeated the Dark Wizard!\nVictory is yours!",
-                selected_class=self.player.__class__.__name__.lower()
+                selected_class=self.player.__class__.__name__.lower(),
+                party=self.party
             )
             return
             

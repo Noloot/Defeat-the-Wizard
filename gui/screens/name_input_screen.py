@@ -20,7 +20,7 @@ class NameInputScreen(tk.Frame):
         submit_button = tk.Button(self, text="Continue", font=("Arial", 14), bg="#444", fg="blue", command=self.submit_name)
         submit_button.pack(pady=20)
         
-        back_button = tk.Button(self, text="Back", font=("Arial", 12), bg="#222", fg="blue", command=lambda: controller.show_character_select())
+        back_button = tk.Button(self, text="Back", font=("Arial", 12), bg="#222", fg="blue", command=lambda: controller.show_character_select_screen())
         back_button.pack(pady=10)
     
     def select_character(self, char_type):
