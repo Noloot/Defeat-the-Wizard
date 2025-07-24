@@ -23,17 +23,6 @@ class CharacterSelectScreen(tk.Frame):
         self.image_ids = []
         self.load_images()
         
-        nav_left = tk.Button(self.canvas, text="<<", font=("Arial", 14), bg="#333", fg="white", command=self.show_next)
-        nav_right = tk.Button(self.canvas, text=">>", font=("Arial", 14), bg="#333", fg="white", command=self.show_previous)
-        
-        select_button = tk.Button(self.canvas, text="Select", font=("Arial", 16,), bg="#222", fg="blue", command=self.select_character)
-        back_button = tk.Button(self.canvas, text="Back", font=("Arial", 14), bg="#444", fg="blue", command=self.controller.show_intro_screen)
-        
-        self.canvas.create_window(250, 480, window=nav_left)
-        self.canvas.create_window(550, 480, window=nav_right)
-        self.canvas.create_window(450, 480, window=select_button)
-        self.canvas.create_window(350, 480, window=back_button)
-        
         self.draw_characters()
         
     def load_images(self):
@@ -87,6 +76,43 @@ class CharacterSelectScreen(tk.Frame):
                 img_id = self.canvas.create_image(x_pos, 200, image=tk_img, anchor="center")
                 self.tk_images[img_id] = tk_img
                 self.image_ids.append((img_id, tk_img))
+                
+        self.canvas.delete("nav_left")
+        self.canvas.delete("nav_right")
+        self.canvas.delete("show_back")
+        
+        self.back_id = self.canvas.create_text(
+            400, 480,
+            text="back",
+            font=("Arial", 18, "bold"),
+            fill="white",
+            tags="show_back"
+        )
+        self.canvas.tag_bind("show_back", "<Button-1>", lambda e: self.controller.show_intro_screen())
+        self.canvas.tag_bind("show_back", "<Enter>", lambda e: self.canvas.itemconfig("show_back", fill="lightgrey"))
+        self.canvas.tag_bind("show_back", "<Leave>", lambda e: self.canvas.itemconfig("show_back", fill="white"))
+        
+        self.nav_left_id = self.canvas.create_text(
+            250, 480,
+            text="<<",
+            font=("Arial", 18, "bold"),
+            fill="white",
+            tags="nav_left"
+        )
+        self.canvas.tag_bind("nav_left", "<Button-1>", lambda e: self.show_next())
+        self.canvas.tag_bind("nav_left", "<Enter>", lambda e: self.canvas.itemconfig("nav_left", fill="lightgrey"))
+        self.canvas.tag_bind("nav_left", "<Leave>", lambda e: self.canvas.itemconfig("nav_left", fill="white"))
+        
+        self.nav_right_id = self.canvas.create_text(
+            550, 480,
+            text=">>",
+            font=("Arial", 18, "bold"),
+            fill="white",
+            tags="nav_right"
+        )
+        self.canvas.tag_bind("nav_right", "<Button-1>", lambda e: self.show_previous())
+        self.canvas.tag_bind("nav_right", "<Enter>", lambda e: self.canvas.itemconfig("nav_right", fill="lightgrey"))
+        self.canvas.tag_bind("nav_right", "<Leave>", lambda e: self.canvas.itemconfig("nav_right", fill="white"))
         
     def show_previous(self):
         self.index = (self.index + 1) % len(self.char_order)
