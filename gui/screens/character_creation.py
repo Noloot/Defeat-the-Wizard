@@ -73,35 +73,12 @@ class CharacterSelectScreen(tk.Frame):
             
             if offset == 0:
                 img = self.detailed_images[char_index].resize((220, 220), Image.LANCZOS)
-                img_bright = ImageEnhance.Brightness(img).enhance(1.0)
-                tk_img = ImageTk.PhotoImage(img_bright)
+                tk_img = ImageTk.PhotoImage(img)
                 img_id = self.canvas.create_image(x_pos, 200, image=tk_img, anchor="center")
                 self.tk_images[img_id] = tk_img
                 self.image_ids.append((img_id, tk_img))
-                coords = self.canvas.coords(img_id)
-                
-                def on_enter(event, idx=char_index, item_id=img_id, pos=coords):
-                    enlarged = self.detailed_images[idx].resize((250, 250), Image.LANCZOS)
-                    glow = ImageEnhance.Brightness(enlarged).enhance(2.0)
-                    glow_img = ImageTk.PhotoImage(glow)
-                    self.canvas.itemconfig(item_id, image=glow_img)
-                    self.canvas.coords(item_id, *pos)
-                    self.tk_images[item_id] = glow_img
-                
-                def on_leave(event, idx=char_index, item_id=img_id, pos=coords):
-                    normal = self.detailed_images[idx].resize((220, 220), Image.LANCZOS)
-                    normal_img = ImageTk.PhotoImage(normal)
-                    self.canvas.itemconfig(img_id, image=normal_img)
-                    self.canvas.coords(item_id, *pos)
-                    self.tk_images[item_id] = normal_img
-                    
-                def on_click(event, idx=char_index):
-                    self.select_character()
-                    
-                self.canvas.tag_bind(img_id, "<Enter>", on_enter)
-                self.canvas.tag_bind(img_id, "<Leave>", on_leave)
-                self.canvas.tag_bind(img_id, "<Button-1>", on_click)
-            elif offset != 0:
+                self.canvas.tag_bind(img_id, "<Button-1>", lambda e, idx=char_index: self.select_character())
+            else:
                 img = self.silhouette_images[char_index].resize((150, 150), Image.LANCZOS)
                 alpha = img.split()[-1].point(lambda p: p * 0.3)
                 img.putalpha(alpha)
